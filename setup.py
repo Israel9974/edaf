@@ -14,7 +14,7 @@ setup(
     ],  # Aquí puedes poner dependencias si las hay
     author='Israel Cornejo',
     description='Genera un reporte en PDF para Análisis Exploratorio de Variables int y float',
-    url='https://github.com/Israel9974/Analisis-Exploratorio',
+    url='https://github.com/Israel9974/edaf',
     classifiers=[
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: MIT License',
@@ -22,4 +22,5 @@ setup(
     keywords='EDA, PDF, análisis exploratorio, pandas, numpy, matplotlib, seaborn, scipy, statsmodels',
     include_package_data=True,
 )
+
 
