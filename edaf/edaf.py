@@ -192,8 +192,9 @@ def edafreport(df, filename='ReporteEDA.pdf'):
             porcentaje = (idx / total) * 100
             msg = f"Progreso: {porcentaje:.1f}% completado | Variable: {col}"
             print('\r' + msg + ' ' * 10, end='', flush=True)
-            print()
+            
 
         
 
+    print()
     print(f"\n📊 PDF generado: {filename}")
