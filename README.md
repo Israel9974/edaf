@@ -1,4 +1,4 @@
-# Análisis Exploratorio de Datos
+# Análisis Exploratorio de Datos 📊
 
 ## Funciones:
 
@@ -21,4 +21,5 @@ Muestra la cantidad de categorías en número y % en df_cat, mostrar_value_count
 - edafreport:
 
 Genera un reporte en PDF con un Boxplot, un Histograma o un KDE, una tabla descriptiva, una tabla de resumen de variables y un gráfico QQplot
+
 
