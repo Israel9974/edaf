@@ -16,6 +16,10 @@ from multiprocessing import Process, Queue
 import time
 import warnings # para envitar warnings de kdeplot
 import statsmodels.api as sm
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import io
+from PIL import Image
+
 
 
 #CONTADOR DE MISSING VALUES
@@ -106,18 +110,16 @@ def resumen_variable(x, col):
     return resumen[['Caracteristica', 'Cantidad', 'Porcentaje (%)']]
 
 
-
-
 # GENERACIÓN DE PDF CON GRÁFICOS Y ESTADÍSTICAS DESCRIPTIVAS
 
 def edafreport(df, filename='ReporteEDA.pdf'):
-    import warnings
     numeric_cols = df.select_dtypes(include='number').columns
     total = len(numeric_cols)
 
     with PdfPages(filename) as pdf:
         for idx, col in enumerate(numeric_cols, 1):
-            fig, axes = plt.subplots(2, 3, figsize=(18, 8))  # 2 filas, 3 columnas
+            fig, axes = plt.subplots(2, 3, figsize=(18, 8))
+            canvas = FigureCanvas(fig)
 
             # --- Boxplot ---
             sns.boxplot(x=df[col], ax=axes[0, 0], color='skyblue')
@@ -138,7 +140,7 @@ def edafreport(df, filename='ReporteEDA.pdf'):
             axes[0, 1].set_xlabel(col)
             axes[0, 1].grid(True)
 
-            # --- Estadísticas descriptivas (describe) ---
+            # --- Estadísticas descriptivas ---
             description = pd.DataFrame(df[col].describe()).reset_index()
             axes[0, 2].axis('tight')
             axes[0, 2].axis('off')
@@ -156,7 +158,7 @@ def edafreport(df, filename='ReporteEDA.pdf'):
                 cell.set_text_props(color='white')
             axes[0, 2].set_title("Describe", fontsize=12, fontweight='bold')
 
-            # Resumen Variable (missing, ceros, outliers, únicos) ---
+            # --- Resumen Variable ---
             resumenVar = resumen_variable(df, col)
             axes[1, 0].axis('tight')
             axes[1, 0].axis('off')
@@ -175,26 +177,37 @@ def edafreport(df, filename='ReporteEDA.pdf'):
             axes[1, 0].set_title("Resumen Variable", fontsize=12, fontweight='bold')
 
             # --- QQ Plot ---
-            sm.qqplot(df[col].dropna(),ax=axes[1,1], line='s')
+            sm.qqplot(df[col].dropna(), ax=axes[1, 1], line='s')
             axes[1, 1].set_title(f'QQ Plot de {col}')
             axes[1, 1].grid(False)
 
-            #  Vaciar los otros dos ejes 
-            #axes[1, 1].axis('off')
             axes[1, 2].axis('off')
             fig.text(0.98, 0.01, 'Elaborado por: Israel Cornejo', ha='right', fontsize=9, color='gray')
 
             plt.tight_layout()
-            pdf.savefig(fig)
+
+            # Convertir figura a imagen rasterizada con mayor DPI
+            buf = io.BytesIO()
+            fig.savefig(buf, format='png', dpi=600, bbox_inches='tight')  # <-- mejora aquí
+            buf.seek(0)
+            img = Image.open(buf)
+
+            # Crear nueva figura con imagen
+            fig_img, ax_img = plt.subplots(figsize=(18, 8))
+            ax_img.axis('off')
+            ax_img.imshow(img)
+
+            pdf.savefig(fig_img)
             plt.close(fig)
+            plt.close(fig_img)
 
             # Progreso
             porcentaje = (idx / total) * 100
             msg = f"Progreso: {porcentaje:.1f}% completado | Variable: {col}"
             print('\r' + msg + ' ' * 10, end='', flush=True)
-            
 
-        
 
     print()
     print(f"\n📊 PDF generado: {filename}")
+
+
