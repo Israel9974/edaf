@@ -5,7 +5,6 @@
 #
 #
 ##############################################################################################
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -21,11 +20,14 @@ import io
 from PIL import Image
 
 
-
 #CONTADOR DE MISSING VALUES
 def contador_de_missing(x):
     missing = x.isna().sum()
-    return missing[missing > 0]
+    missing = missing[missing > 0]
+    missing = missing.to_frame()
+    missing = missing.rename(columns={0: 'missing_values'})
+    missing['Prctj. missing'] = (missing['missing_values'] / len(x))
+    return missing
 
 # CLASIFICADOR DE OBJECTS Y BOOLS
 
@@ -39,12 +41,35 @@ def variables_numericas(x):
 #DESCRIPCIÓN DE VARIABLES CATEGÓRICAS
 
 def mostrar_value_counts(x, variables):
+    categoricas = []
     for columna in variables:
-        print(x[columna].value_counts(normalize=False, dropna=True))
-        print('------------------------------------')
-        print(x[columna].value_counts(normalize=True, dropna=True))
-        print('\n__\n')
+        x1 = x[columna].value_counts(normalize=False, dropna=True)
+        x2 = x[columna].value_counts(normalize=True, dropna=True)
 
+        df = pd.concat([x1, x2], axis=1)
+        df.columns = ['Frecuencia', 'Proporción']
+        df = df.reset_index()
+        df = df.rename(columns={'index': 'Categorias'})
+        df['Variable'] = columna
+        df = df[['Variable', 'Categorias', 'Frecuencia', 'Proporción']]
+
+        separar = pd.DataFrame(
+            [[None, None, None, None]],
+            columns= df.columns
+        )
+
+        df = pd.concat([df, separar], ignore_index=True)
+        categoricas.append(df)
+    return pd.concat(categoricas, axis=0)
+
+
+# EXPORTAR EXCEL CON RESUMEN DE VARIABLES CATEGÓRICAS
+
+def export_excel_cat(df, filename='Resumen_Variables_Categoricas.xlsx'):
+    df_cat = variables_categoricas(df)
+    resumen_cat = mostrar_value_counts(df_cat, df_cat.columns)
+    resumen_cat.to_excel(filename, index=False)
+    print(f"\n📊 Excel generado: {filename}")
 
 #EVALUAR SI SE PUEDE HACER HISTOGRAMA
 
@@ -206,8 +231,6 @@ def edafreport(df, filename='ReporteEDA.pdf'):
             msg = f"Progreso: {porcentaje:.1f}% completado | Variable: {col}"
             print('\r' + msg + ' ' * 10, end='', flush=True)
 
-
     print()
     print(f"\n📊 PDF generado: {filename}")
-
 
