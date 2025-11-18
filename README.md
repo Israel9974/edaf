@@ -23,7 +23,7 @@ Incluye funciones para identificar missing values, separar variables por tipo, v
 ## 🚀 ¿Cómo se utiliza?
 
    ```python
-   import eddaf
+   import edaf
 from edaf import contador_de_missing, variables_categoricas, variables_numericas, mostrar_value_counts, edafreport
    ```
 
@@ -67,6 +67,7 @@ Genera un reporte en PDF con un Boxplot, un Histograma o un KDE, una tabla descr
 ```python
 edafreport(df, 'c:/usuario/xyz/Proyecto1/ReporteEDA.pdf')
 ```
+
 
 
 
