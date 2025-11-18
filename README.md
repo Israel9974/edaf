@@ -57,7 +57,16 @@ EDA = variables_numericas(df)
 Muestra la cantidad de categorías en número y % en df_cat
 
 ```python
-mostrar_value_counts(df_cat)
+mostrar_value_counts(df_cat, df_cat.columns)
+```
+
+## exportar el reporte en excel
+
+Exporta un excel con el los df de las variables categóricas
+
+```python
+ruta = r'C:\Users\xyz\Desktop\carpeta'
+export_excel_cat(df, f'{ruta}/reporteCat.xlsx')
 ```
 
 ## 📚 edafreport:
@@ -67,6 +76,7 @@ Genera un reporte en PDF con un Boxplot, un Histograma o un KDE, una tabla descr
 ```python
 edafreport(df, 'c:/usuario/xyz/Proyecto1/ReporteEDA.pdf')
 ```
+
 
 
 
