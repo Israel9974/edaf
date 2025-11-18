@@ -29,7 +29,7 @@ from edaf import contador_de_missing, variables_categoricas, variables_numericas
 
  ## Funciones:
 
-### ❓ contador_de_missing:
+##❓ contador_de_missing:
 Muestra solo las variables que contienen missing values en un Data Frame.
 
 ```python
@@ -67,6 +67,7 @@ Genera un reporte en PDF con un Boxplot, un Histograma o un KDE, una tabla descr
 ```python
 edafreport(df, 'c:/usuario/xyz/Proyecto1/ReporteEDA.pdf')
 ```
+
 
 
 
