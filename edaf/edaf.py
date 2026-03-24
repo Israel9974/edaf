@@ -40,7 +40,7 @@ def variables_numericas(x):
 
 #DESCRIPCIÓN DE VARIABLES CATEGÓRICAS
 
-def funcion(x, variables):
+def mostrar_value_counts(x, variables):
     categoricas = []
     for columna in variables:
         x1 = x[columna].value_counts(normalize=False, dropna=True)
