@@ -40,7 +40,7 @@ def variables_numericas(x):
 
 #DESCRIPCIÓN DE VARIABLES CATEGÓRICAS
 
-def mostrar_value_counts(x, variables):
+def funcion(x, variables):
     categoricas = []
     for columna in variables:
         x1 = x[columna].value_counts(normalize=False, dropna=True)
@@ -49,7 +49,7 @@ def mostrar_value_counts(x, variables):
         df = pd.concat([x1, x2], axis=1)
         df.columns = ['Frecuencia', 'Proporción']
         df = df.reset_index()
-        df = df.rename(columns={'index': 'Categorias'})
+        df.columns = ['Categorias', 'Frecuencia', 'Proporción']
         df['Variable'] = columna
         df = df[['Variable', 'Categorias', 'Frecuencia', 'Proporción']]
 
